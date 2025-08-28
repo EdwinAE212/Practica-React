@@ -1,5 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: 'https://swapi.info/'
+})
 
 function App() {
   return (
