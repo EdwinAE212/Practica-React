@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -68,3 +69,16 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+=======
+# Practica-React
+Creación de una aplicación con React que consulte una api, en este caso una de star wars y muestre los datos que se solicitan en la aplicación, aparte  la aplicación contiene una barra de búsqueda a partir del nombre y también muestra personajes de 10 en 10 por que esta paginada.
+Tambien cuenta con un Modal que al seleccionar un personaje sera mostrado y podras observar informacion adicional de ese personaje.
+
+# Herramientas utilizadas
+- React
+- JavaScript
+- CSS
+- Libreria Axios
+
+# Como Probarla:
+>>>>>>> bf671b7781e0968fa902535c7157976140a8fa96
