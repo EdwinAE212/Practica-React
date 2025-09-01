@@ -1,10 +1,15 @@
 import instance from "./api";
 import { useEffect, useState } from 'react';
+import axios from "axios";
+import Modal from "./modal";
 import './per.css';
 
 const Personajes = () => {
   const [Personajes, setPersonajes] = useState([]);
   const [Error, setError] = useState(null);
+
+  const [Seleccionado, setSeleccionado] = useState(null);
+  const [InfoAdi, setInfoAdi] = useState({ films: [], vehicles: [], starships: [] });
 
   const[PagActual, setPagActual] = useState(1);
   const Campos = 10;
@@ -35,6 +40,25 @@ const Personajes = () => {
     ObtenerPersonajes();
   }, []);
 
+  const CardClick = async (personaje) => {
+    setSeleccionado (personaje);
+
+    try {
+      const films = await Promise.all(personaje.films.map(url => axios.get(url).then(res => res.data.title)));
+      const vehicles = await Promise.all(personaje.vehicles.map(url => axios.get(url).then(res => res.data.name)));
+      const starships = await Promise.all(personaje.starships.map(url => axios.get(url).then(res => res.data.name)));
+    
+      setInfoAdi({ films, vehicles, starships});
+    } catch (error) {
+      console.error("Error cargando datos adicionales", error);
+    }
+  };
+
+  const LimpiarSeleccion = () => {
+    setSeleccionado(null);
+    setInfoAdi({ films: [], vehicles: [], starships: [] });
+  };
+
   if (Error) {
     return (
       <p style={{ textAlign: "center", color: "red" }}>
@@ -57,6 +81,7 @@ const Personajes = () => {
                 <div
                 key={p.id}
                 className="per-card"
+                onClick={() => CardClick(p)}
                 >
                     <h3 className="per-name">{p.name}</h3>
                     <div class="per-info">
@@ -92,6 +117,7 @@ const Personajes = () => {
                         <span class="value">{p.planeta}</span>
                     </div>
                 </div>
+
             ))}
         </div>
         <div className="paginacion">
@@ -99,6 +125,12 @@ const Personajes = () => {
                 <span>Pagina {PagActual} de {PagTotales}</span>
                 <button onClick={() => setPagActual(PagActual + 1)} disabled={PagActual === PagTotales}>Siguiente</button>
         </div>
+
+        <Modal
+          isOpen={!!Seleccionado}
+          onClose={LimpiarSeleccion}
+          personaje={{ ...Seleccionado, ...InfoAdi}}
+        />
     </div>
   );
 };
