@@ -4,11 +4,9 @@ import Personajes from './datos/personajes';
 
 function App() {
   return (
-    <html>
       <div>
         <Personajes />
       </div>
-    </html>
   );
 }
 

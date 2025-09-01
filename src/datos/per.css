@@ -26,6 +26,74 @@ body {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.barra-busqueda {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  position: relative;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-busqueda {
+  width: 100%;
+  padding: 12px 45px 12px 15px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.input-busqueda:focus {
+  outline: none;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.boton-limpiar {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #ccc;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+  transition: background 0.3s ease;
+}
+
+.boton-limpiar:hover {
+  background: #999;
+}
+
+.sin-resultados {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: white;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 850px) {
+  .barra-busqueda {
+    max-width: 90%;
+    margin-bottom: 20px;
+  }
+  
+  .input-busqueda {
+    padding: 10px 40px 10px 12px;
+    font-size: 0.9rem;
+  }
+}
+
 .per-grid {
     display: grid;
     grid-template-columns: repeat(5, minmax(220px, 1fr));

@@ -1,12 +1,14 @@
-import instance from "./api";
 import { useEffect, useState } from 'react';
 import axios from "axios";
 import Modal from "./modal";
 import './per.css';
 
 const Personajes = () => {
+
   const [Personajes, setPersonajes] = useState([]);
   const [Error, setError] = useState(null);
+  const [Filtrados, setFiltrados] = useState([]);
+  const [Busqueda, setBusqueda] = useState('');
 
   const [Seleccionado, setSeleccionado] = useState(null);
   const [InfoAdi, setInfoAdi] = useState({ films: [], vehicles: [], starships: [] });
@@ -15,15 +17,16 @@ const Personajes = () => {
   const Campos = 10;
   
   useEffect(() => {
+    const api = process.env.REACT_APP_API_URL;
     const ObtenerPersonajes = async () => {
       try {
-        const res = await instance.get("api/people");
+        const res = await axios.get(`${api}api/people`);
         const perDatos = res.data;
 
         const perConPlaneta = await Promise.all(
           perDatos.map(async (p) => {
             try {
-              const planetaRes = await instance.get(p.homeworld);
+              const planetaRes = await axios.get(p.homeworld);
               return { ...p, planeta: planetaRes.data.name || "Desconocido" };
             } catch {
               return { ...p, planeta: "Desconocido" };
@@ -32,6 +35,7 @@ const Personajes = () => {
         );
 
         setPersonajes(perConPlaneta);
+        setFiltrados(perConPlaneta);
       } catch (err) {
         setError(err);
       }
@@ -39,6 +43,19 @@ const Personajes = () => {
 
     ObtenerPersonajes();
   }, []);
+
+   useEffect(() => {
+    if (Busqueda.trim() === '') {
+      setFiltrados(Personajes);
+    } else {
+      const textoBus = Busqueda.toLowerCase();
+      const filtrados = Personajes.filter(personaje => 
+        personaje.name.toLowerCase().includes(textoBus)
+      );
+      setFiltrados(filtrados);
+    }
+    setPagActual(1);
+  }, [Busqueda, Personajes]);
 
   const CardClick = async (personaje) => {
     setSeleccionado (personaje);
@@ -69,17 +86,36 @@ const Personajes = () => {
 
    const UltimoDato = PagActual * Campos;
    const PrimerDato = UltimoDato - Campos;
-   const DatoActual = Personajes.slice(PrimerDato, UltimoDato);
-   const PagTotales = Math.ceil(Personajes.length / Campos);
+   const DatoActual = Filtrados.slice(PrimerDato, UltimoDato);
+   const PagTotales = Math.ceil(Filtrados.length / Campos);
 
   return (
     <div className="per-contenedor">
         <h2 className="titulo">Personajes de Star Wars</h2>
 
+        <div className="barra-busqueda">
+          <input
+            type="text"
+            placeholder="Buscar personajes por nombre..."
+            value={Busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            className="input-busqueda"
+          />
+          {Busqueda && (
+            <button 
+              onClick={() => setBusqueda('')}
+              className="boton-limpiar"
+            >
+              ×
+            </button>
+          )}
+        </div>
+        
         <div className="per-grid">
-            {DatoActual.map((p) => (
+          {DatoActual.length > 0 ? (
+            DatoActual.map((p) => (
                 <div
-                key={p.id}
+                key={p.name}
                 className="per-card"
                 onClick={() => CardClick(p)}
                 >
@@ -117,14 +153,21 @@ const Personajes = () => {
                         <span class="value">{p.planeta}</span>
                     </div>
                 </div>
-
-            ))}
+              ))
+            ) : (
+              <div className="sin-resultados">
+                <p>No se encontraron personajes que coincidan con "{Busqueda}"</p>
+              </div>
+            )}
         </div>
+
+        {Filtrados.length > 0 && (
         <div className="paginacion">
                 <button onClick={() => setPagActual(PagActual -1)} disabled={PagActual === 1}>Anterior</button>
                 <span>Pagina {PagActual} de {PagTotales}</span>
                 <button onClick={() => setPagActual(PagActual + 1)} disabled={PagActual === PagTotales}>Siguiente</button>
         </div>
+        )}
 
         <Modal
           isOpen={!!Seleccionado}
