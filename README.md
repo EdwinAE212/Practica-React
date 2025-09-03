@@ -20,4 +20,6 @@ Eso es lo que hace este proyecto.
 
 -Ya que se encuentren en esa carpeta en la terminal deberá instalar las dependencias con el siguiente comando: npm install
 
+-También se debe crear un archivo en la raíz llamado .env donde se debe agregar lo siguiente:  REACT_APP_API_URL=https://swapi.info/
+
 -Ya instalado todo simplemente ejecutan el proyecto con npm start y les debería mostrar como quedo la práctica.
